@@ -6,6 +6,7 @@ import { useReminders } from '../composables/useReminders'
 import { useToast } from '../composables/useToast'
 import { backupFileName, createBackup, parseBackup, serializeBackup, MAX_BACKUP_BYTES } from '../services/backup'
 import { downloadText } from '../services/download'
+import { listRecoveryCopies, removeRecoveryCopies, type RecoveryCopy } from '../services/storage'
 import type { Preferences, Reminder } from '../types/reminder'
 import { currencyOptions } from '../utils/currency'
 
@@ -64,6 +65,23 @@ async function onFileChosen(event: Event) {
   if (reminders.value.length === 0) applyImport()
 }
 
+// Data the app couldn't read on startup is kept aside rather than deleted.
+const recoveryCopies = ref<RecoveryCopy[]>(listRecoveryCopies())
+const confirmClearRecovery = ref(false)
+
+function downloadRecovery() {
+  const bundle = recoveryCopies.value.map((copy) => ({ savedAt: copy.savedAt, content: copy.raw }))
+  downloadText('dont-miss-it-recovered-data.json', JSON.stringify(bundle, null, 2), 'application/json')
+  toast.show('Recovered data downloaded.')
+}
+
+function clearRecovery() {
+  removeRecoveryCopies()
+  recoveryCopies.value = listRecoveryCopies()
+  confirmClearRecovery.value = false
+  toast.show('Recovered data deleted.')
+}
+
 function applyImport() {
   if (!pendingImport.value) return
   store.replaceAll(pendingImport.value.reminders, pendingImport.value.preferences)
@@ -88,12 +106,34 @@ function applyImport() {
       </p>
     </div>
 
+    <section v-if="recoveryCopies.length" class="card panel" aria-labelledby="recovery-heading">
+      <div class="panel-text">
+        <h2 id="recovery-heading">Recovered data</h2>
+        <p>
+          Some saved data couldn't be read, so instead of deleting it the app kept
+          {{ recoveryCopies.length === 1 ? 'a copy' : `${recoveryCopies.length} copies` }}
+          in this browser. Download it to keep it safe. It contains your reminders, so only
+          share it with people you trust.
+        </p>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" @click="downloadRecovery">
+          <AppIcon name="download" :size="18" />
+          Download
+        </button>
+        <button type="button" class="btn btn-ghost" @click="confirmClearRecovery = true">
+          <AppIcon name="trash" :size="18" />
+          Delete
+        </button>
+      </div>
+    </section>
+
     <section class="card panel" aria-labelledby="export-heading">
       <div class="panel-text">
         <h2 id="export-heading">Export a backup</h2>
         <p>
-          Downloads a <code>.json</code> file with all {{ reminders.length }} of your
-          reminders. The file is created on your device and isn't uploaded anywhere.
+          Downloads a <code>.json</code> file with
+          {{ reminders.length === 1 ? 'your 1 reminder' : `all ${reminders.length} of your reminders` }}. The file is created on your device and isn't uploaded anywhere.
         </p>
       </div>
       <button type="button" class="btn btn-primary" @click="exportBackup">
@@ -169,12 +209,24 @@ function applyImport() {
         backup first.
       </p>
     </ConfirmDialog>
+
+    <ConfirmDialog
+      v-if="confirmClearRecovery"
+      title="Delete recovered data?"
+      confirm-label="Delete"
+      danger
+      @confirm="clearRecovery"
+      @cancel="confirmClearRecovery = false"
+    >
+      <p>The recovered copies will be permanently removed from this browser. Your current reminders aren't affected.</p>
+    </ConfirmDialog>
   </div>
 </template>
 
 <style scoped>
 .page {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   padding-top: 28px;
 }
@@ -230,6 +282,12 @@ code {
 .import-errors ul {
   margin: 6px 0 0;
   padding-left: 18px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .currency-field {

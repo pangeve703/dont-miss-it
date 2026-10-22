@@ -44,8 +44,11 @@ function utcStamp(date: Date): string {
 }
 
 /**
- * Builds a single all-day VEVENT for the reminder's deadline, with a calendar
- * alarm one day before. The alarm is handled by the user's calendar app.
+ * Builds a single all-day VEVENT for the reminder's deadline, with an alarm at
+ * 09:00 the day before. All-day events start at local midnight, so a trigger of
+ * -P1D would fire at midnight; -PT15H fires at 9am instead. Not every calendar
+ * honours alarms in imported files (Google Calendar ignores them), so the UI
+ * tells users to check the alert after importing.
  */
 export function buildIcs(reminder: Reminder, now = new Date()): string {
   if (!parseDateOnly(reminder.deadline)) throw new Error('Reminder has an invalid deadline')
@@ -79,7 +82,7 @@ export function buildIcs(reminder: Reminder, now = new Date()): string {
     'BEGIN:VALARM',
     'ACTION:DISPLAY',
     `DESCRIPTION:${escapeIcsText(summary)}`,
-    'TRIGGER:-P1D',
+    'TRIGGER;RELATED=START:-PT15H',
     'END:VALARM',
     'END:VEVENT',
     'END:VCALENDAR',

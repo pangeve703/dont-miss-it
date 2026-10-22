@@ -1,7 +1,7 @@
 import { computed, reactive, readonly, ref, watch } from 'vue'
 import type { Preferences, Reminder, ReminderInput, StoredData } from '../types/reminder'
 import { SCHEMA_VERSION } from '../types/reminder'
-import { loadData, saveData, type LoadStatus } from '../services/storage'
+import { STORAGE_KEY, loadData, saveData, type LoadResult, type LoadStatus } from '../services/storage'
 import { createId } from '../utils/reminders'
 
 /**
@@ -19,18 +19,50 @@ const loadStatus = ref<LoadStatus>(loaded.status)
 const skippedOnLoad = ref(loaded.skipped)
 const saveFailed = ref(false)
 
+function currentData(): StoredData {
+  return { version: SCHEMA_VERSION, reminders: state.reminders, preferences: state.preferences }
+}
+
+function snapshot(): string {
+  return JSON.stringify(currentData())
+}
+
+/** What this tab last read from or wrote to storage, to skip redundant writes. */
+let lastSynced = snapshot()
+
 function persist(): void {
-  const data: StoredData = {
-    version: SCHEMA_VERSION,
-    reminders: state.reminders,
-    preferences: state.preferences,
-  }
-  saveFailed.value = !saveData(data)
+  const json = snapshot()
+  if (json === lastSynced) return
+  saveFailed.value = !saveData(currentData())
+  if (!saveFailed.value) lastSynced = json
 }
 
 // If stored data was unreadable, loadData() already copied it to a recovery
 // key, so writing fresh data here never destroys the only copy.
 watch(state, persist, { deep: true })
+
+function applyLoaded(result: LoadResult): void {
+  state.reminders.splice(0, state.reminders.length, ...result.data.reminders)
+  state.preferences.currency = result.data.preferences.currency
+  loadStatus.value = result.status
+  skippedOnLoad.value = result.skipped
+  // Mark the freshly loaded data as already saved, so the watcher above
+  // doesn't write it straight back.
+  lastSynced = snapshot()
+}
+
+/**
+ * Another tab changed the data. Without this, each tab would keep its own
+ * stale copy in memory and silently overwrite the other tab's changes on its
+ * next save. (The `storage` event only fires in *other* tabs.)
+ */
+export function handleStorageEvent(event: Pick<StorageEvent, 'key'>): void {
+  // A null key means the other tab cleared all storage.
+  if (event.key !== STORAGE_KEY && event.key !== null) return
+  applyLoaded(loadData())
+}
+
+if (typeof window !== 'undefined') window.addEventListener('storage', handleStorageEvent)
 
 function cleanInput(input: ReminderInput): ReminderInput {
   return {
@@ -56,9 +88,12 @@ export function useReminders() {
     return reminder
   }
 
-  function updateReminder(id: string, input: ReminderInput): void {
+  /** Returns false if the reminder no longer exists (e.g. deleted in another tab). */
+  function updateReminder(id: string, input: ReminderInput): boolean {
     const reminder = state.reminders.find((r) => r.id === id)
-    if (reminder) Object.assign(reminder, cleanInput(input))
+    if (!reminder) return false
+    Object.assign(reminder, cleanInput(input))
+    return true
   }
 
   function setCompleted(id: string, completed: boolean): void {

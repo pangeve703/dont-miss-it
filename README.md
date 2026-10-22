@@ -20,7 +20,7 @@ sign-up, no server and no tracking, and your reminders never leave your device.
 2. Click **Add reminder**, type what you need to remember, and pick the deadline.
    Add the amount at stake if you like.
 3. Come back any time to see what's due. Mark things **Done** as you go.
-4. Tap the calendar icon on a reminder to add it to your calendar app and get an alert.
+4. Tap the calendar icon on a reminder to add it to your calendar app, and check the event has an alert.
 5. Every so often, go to **Backup → Export backup** and keep the file somewhere safe.
 
 Tip: on a phone, use your browser's **Add to Home Screen** option to open it like an app.
@@ -43,7 +43,9 @@ Tip: on a phone, use your browser's **Add to Home Screen** option to open it lik
 - **Search, filter and sort**: by title, category, and status (active / overdue /
   completed / all), with nearest or latest deadline first.
 - **Calendar export**: download any reminder as an `.ics` file for Apple Calendar,
-  Google Calendar, Outlook and others. The event includes an alarm one day before.
+  Google Calendar, Outlook and others. The file includes an alert at 9am the day before.
+  Some apps (including Google Calendar) ignore alerts in imported files, so check the
+  event's notification after adding it.
 - **Backup and restore**: export everything to a JSON file and import it on another
   device. Imports are fully validated, and you're asked before existing data is replaced.
 - **Private by design**: data is stored in `localStorage`. No analytics, ads, trackers,
@@ -62,8 +64,10 @@ Tip: on a phone, use your browser's **Add to Home Screen** option to open it lik
 - **Back up your data.** Clearing browser data, using private browsing or switching
   browsers or devices means your reminders won't be there. Use **Backup → Export
   backup** regularly.
-- If stored data is ever unreadable, the app keeps a copy under a
-  `dont-miss-it:recovery:*` key in localStorage instead of deleting it.
+- If stored data is ever unreadable, the app keeps a copy instead of deleting it. You can
+  download it from **Backup → Recovered data**.
+- If the app is open in several tabs, changes in one tab appear in the others, so they
+  never overwrite each other.
 
 ## Running it locally
 

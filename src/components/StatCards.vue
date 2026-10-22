@@ -94,6 +94,12 @@ defineProps<{
   font-size: 1.35rem;
 }
 
+@media (max-width: 400px) {
+  .money .value {
+    font-size: 1.1rem;
+  }
+}
+
 .alert .value {
   color: var(--danger);
 }

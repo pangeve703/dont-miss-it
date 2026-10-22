@@ -95,6 +95,7 @@ const money = computed(() =>
   --status-bg: var(--accent-soft);
   position: relative;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   padding: 16px 16px 12px 20px;
   overflow: hidden;
@@ -110,7 +111,7 @@ const money = computed(() =>
 
 @media (min-width: 640px) {
   .reminder {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     padding: 16px 16px 16px 22px;
   }
@@ -225,6 +226,7 @@ const money = computed(() =>
 
 .side {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 8px;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import AppIcon from '../components/AppIcon.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
 import FilterBar from '../components/FilterBar.vue'
@@ -69,13 +69,29 @@ function openEdit(reminder: Reminder) {
 
 function onSubmit(input: ReminderInput) {
   if (editing.value) {
-    store.updateReminder(editing.value.id, input)
-    toast.show('Changes saved.')
+    if (store.updateReminder(editing.value.id, input)) {
+      toast.show('Changes saved.')
+    } else {
+      toast.show('This reminder no longer exists. It may have been deleted in another tab.', 'error')
+    }
   } else {
     store.addReminder(input)
     toast.show(`Reminder added: ${input.title.trim()}`)
   }
   formOpen.value = false
+}
+
+/**
+ * When the focused card disappears (deleted, or marked done in the Active
+ * view), focus would fall back to the page itself. Move it to the list
+ * heading instead so keyboard and screen-reader users keep their place.
+ */
+function keepFocusInList() {
+  void nextTick(() => {
+    if (document.activeElement && document.activeElement !== document.body) return
+    const target = document.getElementById('list-heading') ?? document.getElementById('page-heading')
+    target?.focus()
+  })
 }
 
 function onToggle(reminder: Reminder) {
@@ -89,6 +105,7 @@ function onToggle(reminder: Reminder) {
   } else {
     toast.show('Reminder reopened.')
   }
+  keepFocusInList()
 }
 
 function confirmDelete() {
@@ -96,12 +113,13 @@ function confirmDelete() {
   store.deleteReminder(pendingDelete.value.id)
   toast.show('Reminder deleted.')
   pendingDelete.value = null
+  keepFocusInList()
 }
 
 function exportCalendar(reminder: Reminder) {
   try {
     downloadText(icsFileName(reminder), buildIcs(reminder), 'text/calendar;charset=utf-8')
-    toast.show('Calendar file downloaded. Open it to add the event to your calendar.')
+    toast.show('Calendar file downloaded. Open it to add the event, then check it has an alert.')
   } catch {
     toast.show('Sorry, the calendar file couldn’t be created.', 'error')
   }
@@ -147,7 +165,7 @@ function clearFilters() {
 
     <section class="hero">
       <div>
-        <h1>Your deadlines</h1>
+        <h1 id="page-heading" tabindex="-1">Your deadlines</h1>
         <p class="lede">Never forget a deadline that could cost you money.</p>
       </div>
       <button v-if="reminders.length > 0" type="button" class="btn btn-primary add-btn" @click="openAdd">
@@ -189,7 +207,7 @@ function clearFilters() {
       />
 
       <section class="list-area" aria-labelledby="list-heading">
-        <h2 id="list-heading" class="visually-hidden">Reminder list</h2>
+        <h2 id="list-heading" class="visually-hidden" tabindex="-1">Reminder list</h2>
         <FilterBar v-model="query" />
 
         <p class="result-count" aria-live="polite">
@@ -232,7 +250,7 @@ function clearFilters() {
         <AppIcon name="info" :size="16" />
         Reminders live only in this browser. Clearing browser data deletes them, so
         <a :href="ROUTE_HREFS.backup">export a backup</a> now and then.
-        This app doesn't send notifications. To get an alert, add a reminder to your
+        This app doesn't send notifications. For an alert, add a reminder to your
         calendar with the <AppIcon name="calendar" :size="14" /> button.
       </p>
     </template>
@@ -262,6 +280,8 @@ function clearFilters() {
 <style scoped>
 .dashboard {
   display: grid;
+  /* minmax(0, 1fr) lets children shrink, preventing sideways scrolling on small phones. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 20px;
   padding-top: 24px;
 }
@@ -273,6 +293,10 @@ function clearFilters() {
   justify-content: space-between;
   gap: 16px;
   margin-top: 4px;
+}
+
+.hero h1:focus {
+  outline: none;
 }
 
 .hero h1 {
@@ -344,6 +368,7 @@ function clearFilters() {
 
 .list-area {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   margin-top: 8px;
 }

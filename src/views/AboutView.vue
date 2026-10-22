@@ -42,7 +42,9 @@ import { ROUTE_HREFS } from '../composables/useRoute'
         <p>
           This app doesn't send notifications or emails. It shows what's due whenever you
           open it. For an alert, use the calendar button on a reminder to download an
-          <code>.ics</code> file. Most calendar apps will then remind you the day before.
+          <code>.ics</code> file. It includes an alert at 9am the day before, which Apple
+          Calendar keeps. Some apps, including Google Calendar, ignore alerts in imported
+          files, so check the event has a notification after adding it.
         </p>
       </section>
 
@@ -84,6 +86,7 @@ import { ROUTE_HREFS } from '../composables/useRoute'
 <style scoped>
 .page {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   padding-top: 28px;
 }

@@ -54,7 +54,9 @@ describe('buildIcs', () => {
     // DTEND is exclusive, so it's the next day, crossing the year boundary here.
     expect(lines).toContain('DTEND;VALUE=DATE:20270101')
     expect(lines).toContain('SUMMARY:Deadline: Return shoes')
-    expect(lines).toContain('TRIGGER:-P1D')
+    // 15 hours before the all-day event's local midnight start = 9am the day before.
+    // (-P1D would fire at midnight.)
+    expect(lines).toContain('TRIGGER;RELATED=START:-PT15H')
     expect(lines.filter((l) => l.startsWith('BEGIN:')).length).toBe(
       lines.filter((l) => l.startsWith('END:')).length,
     )

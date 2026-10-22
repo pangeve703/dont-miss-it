@@ -5,9 +5,11 @@ import { parseReminder } from '../utils/validation'
 export const STORAGE_KEY = 'dont-miss-it'
 /** Unreadable data is copied here before anything is overwritten. */
 export const RECOVERY_KEY_PREFIX = 'dont-miss-it:recovery:'
+/** Older recovery copies beyond this many are removed, so they can't fill storage. */
+export const MAX_RECOVERY_COPIES = 5
 
 /** The subset of the Web Storage API used here, so tests can pass a fake. */
-export type KeyValueStore = Pick<Storage, 'getItem' | 'setItem'>
+export type KeyValueStore = Pick<Storage, 'getItem' | 'setItem' | 'removeItem' | 'key' | 'length'>
 
 export type LoadStatus =
   /** Data loaded normally (or nothing was stored yet). */
@@ -58,11 +60,62 @@ function getDefaultStore(): KeyValueStore | null {
   }
 }
 
+export interface RecoveryCopy {
+  key: string
+  /** ISO timestamp of when the copy was made. */
+  savedAt: string
+  raw: string
+}
+
+/** Recovery copies, oldest first. */
+export function listRecoveryCopies(store: KeyValueStore | null = getDefaultStore()): RecoveryCopy[] {
+  if (!store) return []
+  const copies: RecoveryCopy[] = []
+  try {
+    for (let i = 0; i < store.length; i++) {
+      const key = store.key(i)
+      if (!key?.startsWith(RECOVERY_KEY_PREFIX)) continue
+      const raw = store.getItem(key)
+      if (raw !== null) copies.push({ key, savedAt: key.slice(RECOVERY_KEY_PREFIX.length), raw })
+    }
+  } catch {
+    return []
+  }
+  return copies.sort((a, b) => a.savedAt.localeCompare(b.savedAt))
+}
+
+export function removeRecoveryCopies(store: KeyValueStore | null = getDefaultStore()): void {
+  if (!store) return
+  for (const copy of listRecoveryCopies(store)) {
+    try {
+      store.removeItem(copy.key)
+    } catch {
+      // Ignore: nothing else depends on this succeeding.
+    }
+  }
+}
+
+/**
+ * Keeps a copy of data that couldn't be fully read. An identical copy is never
+ * stored twice (the same damaged data is seen on every page load), and only
+ * the newest few copies are kept.
+ */
 function preserveRaw(store: KeyValueStore, raw: string, now: Date): void {
+  const existing = listRecoveryCopies(store)
+  if (existing.some((copy) => copy.raw === raw)) return
   try {
     store.setItem(`${RECOVERY_KEY_PREFIX}${now.toISOString()}`, raw)
   } catch {
     // Storage full: nothing more we can safely do.
+    return
+  }
+  const excess = existing.length + 1 - MAX_RECOVERY_COPIES
+  for (const copy of existing.slice(0, Math.max(0, excess))) {
+    try {
+      store.removeItem(copy.key)
+    } catch {
+      // Ignore.
+    }
   }
 }
 

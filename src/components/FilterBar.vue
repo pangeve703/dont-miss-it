@@ -55,12 +55,13 @@ const STATUS_OPTIONS: Array<{ value: StatusFilter; label: string }> = [
 <style scoped>
 .filters {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 
 @media (min-width: 800px) {
   .filters {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .selects {
@@ -132,7 +133,18 @@ const STATUS_OPTIONS: Array<{ value: StatusFilter; label: string }> = [
 
 .selects {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+}
+
+.selects .input {
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 400px) {
+  .seg span {
+    padding: 8px 6px;
+    font-size: 0.825rem;
+  }
 }
 </style>
