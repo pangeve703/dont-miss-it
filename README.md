@@ -120,8 +120,11 @@ then serve `dist/`.
 ## Support the project ☕
 
 Don't Miss It is free, with every feature available to everyone, and it always will be.
-If it has saved you some money, you'll be able to support its development with a
-Buy Me a Coffee donation. A link will appear here soon. Donations are entirely optional.
+If it has saved you some money, you're welcome to support its development:
+
+<a href="https://buymeacoffee.com/eve703"><img src="https://img.shields.io/badge/Buy%20me%20a%20coffee-support-teal?logo=buymeacoffee&logoColor=white" alt="Buy me a coffee" /></a>
+
+**[buymeacoffee.com/eve703](https://buymeacoffee.com/eve703)**. Donations are entirely optional.
 
 Not in a position to donate? Starring the repository ⭐, reporting bugs, or sharing it
 with a friend helps just as much.

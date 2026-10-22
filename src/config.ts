@@ -6,12 +6,10 @@ export const config = {
   appName: 'Don’t Miss It',
 
   /**
-   * Your Buy Me a Coffee page, e.g. 'https://www.buymeacoffee.com/yourname'.
-   *
-   * PLACEHOLDER: while this is an empty string, every donation link is hidden.
-   * Set it to your own URL to show the "Buy me a coffee" link.
+   * Buy Me a Coffee page. Forks should change this to their own page.
+   * Every donation link is hidden while this is an empty string.
    */
-  donationUrl: '',
+  donationUrl: 'https://buymeacoffee.com/eve703',
 
   /**
    * Public source repository. Forks should change this to their own repository.
