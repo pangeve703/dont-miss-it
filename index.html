@@ -3,14 +3,77 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Don't Miss It is a free, private deadline tracker for return windows, subscription renewals, free trials and warranties. Your data stays in your browser." />
+    <title>Don't Miss It – Free Return, Free Trial &amp; Subscription Deadline Tracker</title>
+    <meta name="description" content="Free, private deadline tracker for return windows, free trials, subscription renewals and warranties. No sign-up. Your data stays in your browser." />
     <meta name="theme-color" content="#f7f5f0" />
+
+    <!-- The public URL is written out in full below because social sites and
+         search engines need absolute URLs. If you fork this project, replace
+         https://pangeve703.github.io/dont-miss-it/ with your own site URL here
+         and in public/sitemap.xml. -->
+    <link rel="canonical" href="https://pangeve703.github.io/dont-miss-it/" />
+
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <title>Don't Miss It — Free Deadline Tracker</title>
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+
+    <!-- Link previews (Facebook, WhatsApp, LinkedIn, Reddit, X, Slack…) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Don't Miss It" />
+    <meta property="og:title" content="Don't Miss It – Never miss a deadline that costs you money" />
+    <meta property="og:description" content="Track return windows, free trials, subscriptions and warranties. Free, private, no sign-up." />
+    <meta property="og:url" content="https://pangeve703.github.io/dont-miss-it/" />
+    <meta property="og:image" content="https://pangeve703.github.io/dont-miss-it/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Don't Miss It dashboard showing overdue and upcoming deadlines" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Don't Miss It – Never miss a deadline that costs you money" />
+    <meta name="twitter:description" content="Track return windows, free trials, subscriptions and warranties. Free, private, no sign-up." />
+    <meta name="twitter:image" content="https://pangeve703.github.io/dont-miss-it/og-image.png" />
+
+    <!-- Structured data so search engines understand this is a free web app. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Don't Miss It",
+        "url": "https://pangeve703.github.io/dont-miss-it/",
+        "description": "A free, private deadline tracker for product return windows, free trial expirations, subscription renewals, warranty expirations and other money-related deadlines. No account needed; data stays in your browser.",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Any (web browser)",
+        "browserRequirements": "Requires JavaScript",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "image": "https://pangeve703.github.io/dont-miss-it/og-image.png",
+        "license": "https://opensource.org/licenses/MIT",
+        "codeRepository": "https://github.com/pangeve703/dont-miss-it"
+      }
+    </script>
   </head>
   <body>
-    <div id="app"></div>
-    <noscript>Don't Miss It needs JavaScript to run. All of your data stays in your own browser.</noscript>
+    <div id="app">
+      <!-- Shown to crawlers and to anyone without JavaScript. The app replaces
+           this content as soon as it starts. -->
+      <div style="max-width: 640px; margin: 48px auto; padding: 0 16px; font-family: system-ui, sans-serif; color: #1d2120; line-height: 1.6">
+        <h1>Don't Miss It: a free deadline tracker</h1>
+        <p>Never forget a deadline that could cost you money. Don't Miss It helps you remember:</p>
+        <ul>
+          <li>Online shopping return and refund windows</li>
+          <li>Free trial expiration dates, so you can cancel before you're charged</li>
+          <li>Subscription and membership renewal dates</li>
+          <li>Product warranty expiration dates</li>
+          <li>Insurance, bill and other renewal deadlines</li>
+        </ul>
+        <p>
+          It's free and open source, with no account or sign-up. Your reminders are stored
+          privately in your own browser and never sent to a server. You can see what's due
+          soon or overdue, track how much money is at stake, add deadlines to your calendar
+          (.ics), and back up your data to a file.
+        </p>
+        <noscript><p><strong>Please enable JavaScript to use the app.</strong></p></noscript>
+      </div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

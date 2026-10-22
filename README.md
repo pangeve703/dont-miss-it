@@ -144,6 +144,10 @@ export const config = {
 
 Links stay **hidden** while a value is empty, so a fork never shows a broken or placeholder link.
 
+Also replace `https://pangeve703.github.io/dont-miss-it/` with your own site URL in
+[`index.html`](index.html) (canonical link, link-preview tags and structured data) and in
+[`public/sitemap.xml`](public/sitemap.xml).
+
 ## Project structure
 
 ```
