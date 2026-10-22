@@ -1,13 +1,29 @@
 # Don't Miss It
 
+[![Deploy to GitHub Pages](https://github.com/pangeve703/dont-miss-it/actions/workflows/deploy.yml/badge.svg)](https://github.com/pangeve703/dont-miss-it/actions/workflows/deploy.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-teal.svg)](LICENSE)
+
 **Never forget a deadline that could cost you money.**
+
+### 👉 [Open the app](https://pangeve703.github.io/dont-miss-it/)
 
 Don't Miss It is a free, open-source deadline tracker for everyday money deadlines:
 return windows, subscription renewals, free trials, warranties, insurance and
 membership renewals. It runs entirely in your browser. There's no account, no
-server and no tracking, and your reminders never leave your device.
+sign-up, no server and no tracking, and your reminders never leave your device.
 
 ![Dashboard on desktop](docs/screenshots/dashboard-desktop.png)
+
+## How to use it
+
+1. [Open the app](https://pangeve703.github.io/dont-miss-it/) in any modern browser, on your phone or computer.
+2. Click **Add reminder**, type what you need to remember, and pick the deadline.
+   Add the amount at stake if you like.
+3. Come back any time to see what's due. Mark things **Done** as you go.
+4. Tap the calendar icon on a reminder to add it to your calendar app and get an alert.
+5. Every so often, go to **Backup → Export backup** and keep the file somewhere safe.
+
+Tip: on a phone, use your browser's **Add to Home Screen** option to open it like an app.
 
 <details>
 <summary>Mobile screenshot</summary>
@@ -49,11 +65,15 @@ server and no tracking, and your reminders never leave your device.
 - If stored data is ever unreadable, the app keeps a copy under a
   `dont-miss-it:recovery:*` key in localStorage instead of deleting it.
 
-## Getting started
+## Running it locally
+
+You don't need to install anything to use the app. These steps are for developers.
 
 Requirements: [Node.js](https://nodejs.org/) 20.19+ or 22.12+ (as required by Vite 8) and npm.
 
 ```bash
+git clone https://github.com/pangeve703/dont-miss-it.git
+cd dont-miss-it
 npm install
 npm run dev        # start the dev server at http://localhost:5173
 ```
@@ -69,15 +89,15 @@ npm run dev        # start the dev server at http://localhost:5173
 | `npm run build`     | Type-check and build to `dist/`                |
 | `npm run preview`   | Serve the production build locally             |
 
-## Deployment (free)
+## Host your own copy (free)
 
-The build is a static site in `dist/`. It uses relative asset paths (`base: './'`) and
+Want your own copy? Fork the repository and deploy it for free. The build is a static site in `dist/`. It uses relative asset paths (`base: './'`) and
 hash-based URLs (`#/about`), so it works at a domain root **or** under a sub-path with no
 server configuration.
 
 ### GitHub Pages (recommended)
 
-1. Push this repository to GitHub.
+1. Fork this repository (or push your copy to GitHub).
 2. Go to **Settings → Pages** and set **Source** to **GitHub Actions**.
 3. Push to `main`. The workflow in [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
    runs the tests, builds the site and publishes it to
@@ -97,27 +117,29 @@ server configuration.
 Any other static host (Netlify, Vercel, a plain web server) works the same way: build,
 then serve `dist/`.
 
-## Configuration and donation link
+## Support the project ☕
 
-All deployment-specific settings live in one file: [`src/config.ts`](src/config.ts).
+Don't Miss It is free, with every feature available to everyone, and it always will be.
+If it has saved you some money, you'll be able to support its development with a
+Buy Me a Coffee donation. A link will appear here soon. Donations are entirely optional.
+
+Not in a position to donate? Starring the repository ⭐, reporting bugs, or sharing it
+with a friend helps just as much.
+
+### Configuring a fork
+
+If you host your own copy, all deployment-specific settings live in one file,
+[`src/config.ts`](src/config.ts):
 
 ```ts
 export const config = {
   appName: 'Don’t Miss It',
-  donationUrl: '',     // e.g. 'https://www.buymeacoffee.com/yourname'
-  repositoryUrl: '',   // e.g. 'https://github.com/yourname/dont-miss-it'
+  donationUrl: '',     // your own donation page, e.g. 'https://www.buymeacoffee.com/yourname'
+  repositoryUrl: '',   // your repository, e.g. 'https://github.com/yourname/dont-miss-it'
 }
 ```
 
-### Support the project ☕
-
-Don't Miss It is free, with every feature available to everyone. If it has saved you some
-money, you're welcome to support its development:
-
-**Buy me a coffee:** _link coming soon_ <!-- Replace with your Buy Me a Coffee URL -->
-
-Donation links in the app stay **hidden** until `donationUrl` is set, so a fork never shows
-a broken or placeholder link. Donations are entirely optional and there are no pop-ups.
+Links stay **hidden** while a value is empty, so a fork never shows a broken or placeholder link.
 
 ## Project structure
 
@@ -170,8 +192,8 @@ it small, private and dependency-light, add tests for logic changes, and make su
 
 ## Reporting issues
 
-Found a bug or have an idea? Open an issue on GitHub using the bug report or feature
-request template. For date-related bugs, please include your time zone. **Please don't
+Found a bug or have an idea? [Open an issue](https://github.com/pangeve703/dont-miss-it/issues/new/choose)
+using the bug report or feature request template. For date-related bugs, please include your time zone. **Please don't
 attach your real backup file or personal reminder details.** Make up an example instead.
 
 ## License

@@ -14,8 +14,8 @@ export const config = {
   donationUrl: '',
 
   /**
-   * Public source repository, e.g. 'https://github.com/yourname/dont-miss-it'.
-   * PLACEHOLDER: links to the source code are hidden while this is empty.
+   * Public source repository. Forks should change this to their own repository.
+   * Links to the source code are hidden while this is empty.
    */
-  repositoryUrl: '',
+  repositoryUrl: 'https://github.com/pangeve703/dont-miss-it',
 } as const
