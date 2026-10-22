@@ -2,6 +2,7 @@
 import { computed, ref, useId } from 'vue'
 import AppIcon from '../components/AppIcon.vue'
 import ConfirmDialog from '../components/ConfirmDialog.vue'
+import EmailRemindersPanel from '../components/EmailRemindersPanel.vue'
 import { useReminders } from '../composables/useReminders'
 import { useToast } from '../composables/useToast'
 import { backupFileName, createBackup, parseBackup, serializeBackup, MAX_BACKUP_BYTES } from '../services/backup'
@@ -93,8 +94,8 @@ function applyImport() {
 <template>
   <div class="container page">
     <header class="page-header">
-      <h1>Backup &amp; settings</h1>
-      <p class="lede">Keep a copy of your reminders, or move them to another device or browser.</p>
+      <h1>Settings &amp; backup</h1>
+      <p class="lede">Get email reminders, keep a copy of your reminders, or move them to another device.</p>
     </header>
 
     <div class="notice notice-warning">
@@ -105,6 +106,8 @@ function applyImport() {
         will lose them. Export a backup every so often and keep it somewhere safe.
       </p>
     </div>
+
+    <EmailRemindersPanel />
 
     <section v-if="recoveryCopies.length" class="card panel" aria-labelledby="recovery-heading">
       <div class="panel-text">

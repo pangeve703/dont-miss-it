@@ -52,7 +52,7 @@ function migrate(raw: Record<string, unknown>): Record<string, unknown> | null {
   return null
 }
 
-function getDefaultStore(): KeyValueStore | null {
+export function getDefaultStore(): KeyValueStore | null {
   try {
     return globalThis.localStorage ?? null
   } catch {

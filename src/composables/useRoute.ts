@@ -4,13 +4,14 @@ export type RouteName = 'dashboard' | 'backup' | 'about'
 
 const ROUTES: Record<string, RouteName> = {
   '#/': 'dashboard',
+  '#/settings': 'backup',
   '#/backup': 'backup',
   '#/about': 'about',
 }
 
 export const ROUTE_HREFS: Record<RouteName, string> = {
   dashboard: '#/',
-  backup: '#/backup',
+  backup: '#/settings',
   about: '#/about',
 }
 

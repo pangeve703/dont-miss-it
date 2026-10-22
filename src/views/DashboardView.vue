@@ -7,6 +7,7 @@ import ModalDialog from '../components/ModalDialog.vue'
 import ReminderCard from '../components/ReminderCard.vue'
 import ReminderForm from '../components/ReminderForm.vue'
 import StatCards from '../components/StatCards.vue'
+import { useEmailReminders } from '../composables/useEmailReminders'
 import { useReminders } from '../composables/useReminders'
 import { ROUTE_HREFS } from '../composables/useRoute'
 import { useToast } from '../composables/useToast'
@@ -20,6 +21,7 @@ import { DEFAULT_QUERY, getStatus, queryReminders, summarize, type ReminderQuery
 const store = useReminders()
 const { reminders, preferences } = store
 const toast = useToast()
+const { available: emailAvailable } = useEmailReminders()
 const today = useToday()
 
 const query = ref<ReminderQuery>({ ...DEFAULT_QUERY })
@@ -250,8 +252,14 @@ function clearFilters() {
         <AppIcon name="info" :size="16" />
         Reminders live only in this browser. Clearing browser data deletes them, so
         <a :href="ROUTE_HREFS.backup">export a backup</a> now and then.
-        This app doesn't send notifications. For an alert, add a reminder to your
-        calendar with the <AppIcon name="calendar" :size="14" /> button.
+        <template v-if="emailAvailable">
+          Want alerts? Turn on <a :href="ROUTE_HREFS.backup">email reminders</a>, or add a
+          reminder to your calendar with the <AppIcon name="calendar" :size="14" /> button.
+        </template>
+        <template v-else>
+          This app doesn't send notifications. For an alert, add a reminder to your
+          calendar with the <AppIcon name="calendar" :size="14" /> button.
+        </template>
       </p>
     </template>
 

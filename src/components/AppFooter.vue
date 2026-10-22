@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { config } from '../config'
+import { useEmailReminders } from '../composables/useEmailReminders'
 import { ROUTE_HREFS } from '../composables/useRoute'
 import AppIcon from './AppIcon.vue'
+
+const { available: emailAvailable } = useEmailReminders()
 </script>
 
 <template>
@@ -9,7 +12,8 @@ import AppIcon from './AppIcon.vue'
     <div class="container inner">
       <p class="privacy">
         <AppIcon name="shield" :size="16" />
-        Your reminders are stored only in this browser. Nothing is sent to a server.
+        Your reminders are stored only in this browser.
+        {{ emailAvailable ? 'Nothing is sent to a server unless you turn on email reminders.' : 'Nothing is sent to a server.' }}
         <a :href="ROUTE_HREFS.about">Learn more</a>
       </p>
       <p class="links">

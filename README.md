@@ -21,7 +21,8 @@ sign-up, no server and no tracking, and your reminders never leave your device.
    Add the amount at stake if you like.
 3. Come back any time to see what's due. Mark things **Done** as you go.
 4. Tap the calendar icon on a reminder to add it to your calendar app, and check the event has an alert.
-5. Every so often, go to **Backup → Export backup** and keep the file somewhere safe.
+5. Optional: turn on **email reminders** in **Settings** to get an email before deadlines.
+6. Every so often, go to **Settings → Export backup** and keep the file somewhere safe.
 
 Tip: on a phone, use your browser's **Add to Home Screen** option to open it like an app.
 
@@ -46,6 +47,11 @@ Tip: on a phone, use your browser's **Add to Home Screen** option to open it lik
   Google Calendar, Outlook and others. The file includes an alert at 9am the day before.
   Some apps (including Google Calendar) ignore alerts in imported files, so check the
   event's notification after adding it.
+- **Optional email reminders**: get an email a few days before and on the day, even when
+  the app is closed. Off by default; only the email address and each active reminder's title
+  and date are shared, never amounts or notes. Runs free on Google Apps Script
+  (see [`email-service/`](email-service/README.md)). _Being set up on the hosted app; the
+  option appears under Settings once it's live._
 - **Backup and restore**: export everything to a JSON file and import it on another
   device. Imports are fully validated, and you're asked before existing data is replaced.
 - **Private by design**: data is stored in `localStorage`. No analytics, ads, trackers,
@@ -53,19 +59,23 @@ Tip: on a phone, use your browser's **Add to Home Screen** option to open it lik
 - **Accessible and responsive**: keyboard friendly, screen-reader labels, visible focus,
   reduced-motion support, and a mobile-first layout.
 
-> **Notifications:** Don't Miss It does not send push notifications or emails. It shows
-> what's due whenever you open it. For an alert, export the reminder to your calendar.
+> **Notifications:** Don't Miss It doesn't send push notifications. For alerts, turn on the
+> optional email reminders or export a reminder to your calendar.
 
 ## Privacy
 
 - Reminders and settings are saved in your browser's `localStorage`, on your device only.
-- Nothing is sent to any server. The app makes no network requests after loading.
+- By default nothing is sent to any server, and the app makes no network requests after loading.
+- **Email reminders are opt-in.** If you turn them on, your email address, time zone, and the
+  title and date of your active reminders are sent to the reminder service (a Google Sheet run
+  by the project maintainer). Amounts and notes are never sent. Turning email reminders off,
+  or clicking unsubscribe in any email, deletes that data.
 - No accounts, cookies, analytics, advertising or AI services.
 - **Back up your data.** Clearing browser data, using private browsing or switching
-  browsers or devices means your reminders won't be there. Use **Backup → Export
+  browsers or devices means your reminders won't be there. Use **Settings → Export
   backup** regularly.
 - If stored data is ever unreadable, the app keeps a copy instead of deleting it. You can
-  download it from **Backup → Recovered data**.
+  download it from **Settings → Recovered data**.
 - If the app is open in several tabs, changes in one tab appear in the others, so they
   never overwrite each other.
 
@@ -143,6 +153,7 @@ export const config = {
   appName: 'Don’t Miss It',
   donationUrl: '',     // your own donation page, e.g. 'https://www.buymeacoffee.com/yourname'
   repositoryUrl: '',   // your repository, e.g. 'https://github.com/yourname/dont-miss-it'
+  emailServiceUrl: '', // optional: your deployed email-service web app URL (ends in /exec)
 }
 ```
 
@@ -157,13 +168,14 @@ Also replace `https://pangeve703.github.io/dont-miss-it/` with your own site URL
 ```
 src/
   components/    UI building blocks (cards, form, dialogs, filters, toasts)
-  views/         Pages: Dashboard, Backup & settings, About & privacy
+  views/         Pages: Dashboard, Settings & backup, About & privacy
   composables/   Shared state (reminders, toasts, today's date, routing)
   services/      Storage, backup import/export, .ics generation, downloads
   types/         Reminder data model and constants
   utils/         Pure logic: dates, currency, filtering/sorting, validation
   config.ts      Donation and repository links
-tests/           Vitest unit tests for the business logic
+tests/           Vitest unit tests (including the email service, run in Node)
+email-service/   Optional email reminders: Google Apps Script code and setup guide
 ```
 
 ### Data model

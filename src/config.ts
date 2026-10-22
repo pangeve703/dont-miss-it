@@ -16,4 +16,11 @@ export const config = {
    * Links to the source code are hidden while this is empty.
    */
   repositoryUrl: 'https://github.com/pangeve703/dont-miss-it',
+
+  /**
+   * Web app URL of the optional email reminder service (email-service/Code.gs,
+   * deployed on Google Apps Script), ending in /exec.
+   * The email reminder option is hidden while this is an empty string.
+   */
+  emailServiceUrl: '' as string,
 } as const

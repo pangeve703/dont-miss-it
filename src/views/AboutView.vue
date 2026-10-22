@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import AppIcon from '../components/AppIcon.vue'
 import { config } from '../config'
+import { useEmailReminders } from '../composables/useEmailReminders'
 import { ROUTE_HREFS } from '../composables/useRoute'
+
+const { available: emailAvailable } = useEmailReminders()
 </script>
 
 <template>
@@ -19,9 +22,16 @@ import { ROUTE_HREFS } from '../composables/useRoute'
         <span class="icon"><AppIcon name="shield" /></span>
         <h2>Your data stays with you</h2>
         <p>
-          Reminders are saved in your browser's local storage on this device. They're never
-          sent to a server. There's no account, no analytics, no advertising trackers and no AI
-          services. The app doesn't even load external fonts.
+          Reminders are saved in your browser's local storage on this device. There's no account,
+          no analytics, no advertising trackers and no AI services. The app doesn't even load
+          external fonts.
+          <template v-if="emailAvailable">
+            Nothing is sent to a server unless you turn on optional email reminders. Then only
+            your email address and the title and date of your active reminders go to the
+            reminder service (a Google Sheet run by the project maintainer). Turning it off
+            deletes them.
+          </template>
+          <template v-else>Nothing is sent to a server.</template>
         </p>
       </section>
 
@@ -40,8 +50,12 @@ import { ROUTE_HREFS } from '../composables/useRoute'
         <span class="icon"><AppIcon name="calendar" /></span>
         <h2>About notifications</h2>
         <p>
-          This app doesn't send notifications or emails. It shows what's due whenever you
-          open it. For an alert, use the calendar button on a reminder to download an
+          <template v-if="emailAvailable">
+            Turn on optional <a :href="ROUTE_HREFS.backup">email reminders</a> to get an
+            email before a deadline, even when the app is closed.
+          </template>
+          <template v-else>This app doesn't send notifications or emails.</template>
+          It shows what's due whenever you open it. You can also use the calendar button on a reminder to download an
           <code>.ics</code> file. It includes an alert at 9am the day before, which Apple
           Calendar keeps. Some apps, including Google Calendar, ignore alerts in imported
           files, so check the event has a notification after adding it.

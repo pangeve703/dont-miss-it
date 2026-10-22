@@ -3,12 +3,15 @@ import { useTemplateRef } from 'vue'
 import AppFooter from './components/AppFooter.vue'
 import AppHeader from './components/AppHeader.vue'
 import ToastHost from './components/ToastHost.vue'
+import { useEmailReminders } from './composables/useEmailReminders'
 import { useRoute } from './composables/useRoute'
 import AboutView from './views/AboutView.vue'
 import BackupView from './views/BackupView.vue'
 import DashboardView from './views/DashboardView.vue'
 
 const route = useRoute()
+// Keeps optional email reminders in sync with changes (does nothing unless turned on).
+useEmailReminders()
 const main = useTemplateRef<HTMLElement>('main')
 </script>
 

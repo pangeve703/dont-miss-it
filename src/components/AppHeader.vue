@@ -9,7 +9,7 @@ const logoUrl = `${import.meta.env.BASE_URL}favicon.svg`
 
 const LINKS: Array<{ name: RouteName; label: string }> = [
   { name: 'dashboard', label: 'Reminders' },
-  { name: 'backup', label: 'Backup' },
+  { name: 'backup', label: 'Settings' },
   { name: 'about', label: 'About' },
 ]
 </script>
